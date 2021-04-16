@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Home Page</title>
+</head>
+<body>
+    <h3>Home Page</h3>
+    <a href="{% url 'logout'%}">Logout!</a><br><br>
+    <a href="{% url 'profile'%}">Go to your profile page</a>
+    <div class = "container">
+        {% for question in questions %}
+        <div class = "card mb-3">
+            <div class = "card-body">
+                <h4 class = "card-title" ><a href = "/detail/{{question.id}}">{{ question.title }}</a></h4>
+                <p class = "card-text"> {{ question.detail }}</p>
+                <p>
+                    <a href = "#" class = "mr-2">{{ question.user.username }}</a>
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- Add Qestion form
+    <h3>Ask a question </h3>
+    <form method="POST" action=".">
+        {% csrf_token %}
+        Question: <input type='text' name="question_text"/><br/>
+        <button type='submit'>Send Data</button>
+    </form> -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Add a question !!!!</h1>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ question_form }}
+                    <button type="submit" class="btn btn-primary btn-sm" value=""> Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
+</body>
+</html>

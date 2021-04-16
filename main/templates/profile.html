@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>profile Page</title>
+    <style>
+    .success{
+    color:red
+    }
+  </style>
+</head>
+<body>
+{% if messages %}
+{% for m in messages %}
+<small class="{{m.tags}}">{{m}}</small><br>
+{% endfor %}
+<!--<a href="{% url 'main:login'%}">Click to Go to Login page</a>-->
+{% endif %}
+<h1> Welcome {{name}}</h1>
+<p>Here in this stackoverflow website you can add questions by going to home page and add answers and comments and upvote or downvote stuff!!!!!!!!!!!</p>
+<br>
+<a href="{% url 'logout'%}">Logout</a>
+<br>
+<a href="{% url 'home'%}">Go back to Home Page</a>
+</body>
+</html>

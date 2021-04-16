@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>detail</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <style>
+        .box{
+        display:none;
+        }
+        .ab{
+        display:block;
+        }
+    </style>
+</head>
+
+
+
+
+
+
+<a href="{% url 'logout'%}">Logout!</a><br><br>
+<a href="{% url 'profile'%}">Go to your profile page</a>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Page</title>
+</head>
+<body>
+    <!-- Question List -->
+    <div class = "container">
+        <h2>{{ question.title }} </h2>
+        <p> {{ question.detail }}</p>
+        <p>
+            <span> {{question.add_time|date:'d/m/Y' }}</span>
+            <a href="#">{{ question.user.username }}</a>
+        </p>
+
+        <!-- Question upvote or downvote -->
+        <div style="display: inline-block;">
+            <form action="{% url 'like' question.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" ><i class="fas fa-arrow-up"></i> </button>
+            </form>
+            {{question.upvotes}}
+            {{question.downvotes}}
+            <form action="{% url 'dislike' question.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" ><i class="fas fa-arrow-down"></i> </button>
+            </form>
+        </div>
+
+
+
+        <!-- Add Answer from user form -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Add an answer to this question !!!!</h3>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ answer_form }}
+                        <!-- Question Title <input type='text' name="title"/><br/>
+                        Question Detail <input type='text' name="detail"/><br/> -->
+                        <button type="submit" name="addanswer"> Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question Comment Form starts -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Add a comment to this question !!!!</h3>
+                    <form action="" method="POST">
+                        
+                        {% csrf_token %}
+                        
+                        {{ comment_question_form }}
+                        <!-- Question Title <input type='text' name="title"/><br/>
+                        Question Detail <input type='text' name="detail"/><br/> -->
+                        <button type="submit" name="questioncomment"> Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <!-- Question comment starts -->
+        <h3 class = "my-2">Question Comments</h3>
+        {% for comment in question.commentquestion_set.all %}
+        <div class = "card">
+            <div class = "card-body">
+                <p>{{ comment.comment_question_text }}</p>
+                <p>
+                    <a href = "#">{{comment.user.username}}</a>
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <hr>
+    <hr>
+    <!-- Answers List -->
+    <h3>ANSWERS:</h3>
+    {% for answer in answers %}
+    <div class="row">
+        <!-- Upvote downvote buttons-->
+        <!-- <div class="col-1" style="text-align: center;">
+            <div class = "upvote">
+                <strong> 123 </strong><br/>
+                <span class="text-success">
+                    <i class ="fa fa-arrow-up fa-2x"></i>
+                </span>
+            </div>
+            <div class = "downvote">
+                <span class="text-danger">
+                    <i class ="fa fa-arrow-down fa-2x"></i>
+                    
+                </span></br>
+                <strong> 123 </strong>
+            </div>
+        </div> -->
+        <div style="display: inline-block;">
+            <form action="{% url 'like' question.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="like" value="{{answer.id}}">
+                    <span class="text-danger">
+                        <i class="fas fa-arrow-up"></i> </button>
+                    </span>
+            </form>
+            {{answer.upvotes}}
+            <br>
+            {{answer.downvotes}}
+            <form action="{% url 'dislike' question.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="dislike" value="{{answer.id}}"><i class="fas fa-arrow-down"></i> </button>
+            </form>
+            </div>
+
+        <div class="col-11">
+            <h3>Answer detail</h3>
+            <div class = "col-11">
+                <p>
+                    {{answer.detail}}
+                </p>
+                <p>
+                    <a href="#">{{answer.user.username}}</a>
+                </p>
+            
+            <!-- Answer Comment Form starts -->
+            <div class="container">
+                <div class="col-md-12">
+                    <h3>Add a comment to this answer !!!!</h3>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <!-- <label for="a">Add comment :- </label> -->
+                        <input type="hidden" name="comment" id="a" />
+                        <input type="hidden" name="answerid" value={{answer.id}}/>
+                        <!-- <input type="hidden" name="question", value={{question.id}}/>
+                        <input type="hidden" name="parent", value={{answer.id}}/> -->
+                        {{ comment_answer_form }}
+                        <!-- Answer id - {{answer.id}} -->
+                        <button type="submit" name="answercomment" value="{{answer.id}}"> Save</button>
+                    </form>
+                </div>
+            </div>
+
+
+            <!-- Answer comment form -->
+            <!-- <blockquote id="reply-form-container-{{response.id}}" class="reply-form-container">
+                <form method="POST" action="" class="reply-form">
+                {% csrf_token %}
+                <input type="hidden" name="question" value="{{question.id}}"/>
+                <input type="hidden" name="parent" value="{{response.id}}"/>
+                    {{comment_answer_form}}
+                    <button type="submit" name="answercomment"> Save</button>
+                <input type="submit" class="reply-form-submit-button" value="Submit"/> -->
+                <!-- </form>
+            </blockquote>
+            <br><br> -->
+                
+
+            <!-- {% for comment in question.commentquestion_set.all %}
+            <div class = "card">
+                <div class = "card-body">
+                    <p>{{ comment.comment_question_text }}</p>
+                    <p>
+                        <a href = "#">{{comment.user.username}}</a>
+                    </p>
+                </div>
+            </div>
+            {% endfor %} -->
+
+                <!-- Comment to answer Section starts -->
+                
+            <h3 class = "my-2">Answer Comments</h3>
+            <!-- {% for comment in answer.commentanswer_set.all %} -->
+            <div class="comment-wrapper-{{answer.id}}"></div>
+                {% for newcomment in answer.commentanswer_set.all %}
+                    <div class = "card">
+                        <div class = "card-body">
+                            <p>{{ newcomment.detail }}</p>
+                            <p>
+                                <a href = "#">{{ newcomment.user.username}}</a>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <hr>
+            <hr>
+        </div>
+    </div>
+            <!-- </div>
+            <hr> -->
+            <!-- {% endfor %} -->
+    {% endfor %}
+
+
+
+    
+</body>
